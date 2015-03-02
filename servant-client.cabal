@@ -48,7 +48,7 @@ library
     , http-types
     , network-uri >= 2.6
     , safe
-    , servant >= 0.2.2
+    , servant >= 0.2.2 && < 0.3
     , string-conversions
     , text
     , transformers
@@ -75,6 +75,6 @@ test-suite spec
     , QuickCheck >= 2.7
     , servant >= 0.2.1
     , servant-client
-    , servant-server >= 0.2.1
+    , servant-server >= 0.2.1 && < 0.3
     , wai
     , warp
