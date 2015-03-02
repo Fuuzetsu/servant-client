@@ -4,8 +4,8 @@ ghc:
   - 7.8
 
 before_install:
-  - git clone https://github.com/haskell-servant/servant.git
-  - git clone https://github.com/haskell-servant/servant-server.git
+  - git clone -b servant-0.2 https://github.com/haskell-servant/servant.git
+  - git clone -b servant-server-0.2 https://github.com/haskell-servant/servant-server.git
   - cabal sandbox init
   - cabal sandbox add-source servant/
   - cabal sandbox add-source servant-server/
