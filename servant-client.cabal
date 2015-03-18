@@ -41,6 +41,7 @@ library
     , aeson
     , attoparsec
     , bytestring
+    , case-insensitive
     , either
     , exceptions
     , http-client

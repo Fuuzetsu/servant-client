@@ -165,14 +165,15 @@ performRequestCT :: MimeUnrender ct result =>
   Proxy ct -> Method -> Req -> [Int] -> BaseUrl -> EitherT ServantError IO result
 performRequestCT ct reqMethod req wantedStatus reqHost = do
   let acceptCT = contentType ct
-  (_status, respBody, respCT, _response) <-
+  (_status, respBody, respCT, response) <-
     performRequest reqMethod (req { reqAccept = [acceptCT] }) (`elem` wantedStatus) reqHost
   unless (matches respCT (acceptCT)) $
     left $ UnsupportedContentType respCT respBody
+  let hs = responseHeaders response
   either
     (left . (\s -> DecodeFailure s respCT respBody))
     return
-    (fromByteString ct respBody)
+    (fromByteString ct hs respBody)
 
 
 catchHttpException :: IO a -> IO (Either HttpException a)

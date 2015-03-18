@@ -15,13 +15,14 @@ module Servant.Client
   , module Servant.Common.BaseUrl
   ) where
 
+import qualified Data.CaseInsensitive as CI
 import Control.Monad
 import Control.Monad.Trans.Either
 import Data.ByteString.Lazy (ByteString)
 import Data.List
 import Data.Proxy
 import Data.String.Conversions
-import Data.Text (unpack)
+import Data.Text (unpack, Text)
 import GHC.TypeLits
 import Network.HTTP.Client (Response)
 import Network.HTTP.Media
@@ -447,7 +448,9 @@ instance (MimeRender ct a, HasClient sublayout)
   clientWithRoute Proxy req body =
     clientWithRoute (Proxy :: Proxy sublayout) $ do
       let ctProxy = Proxy :: Proxy ct
-      setRQBody (toByteString ctProxy body) (contentType ctProxy) req
+          (hs, body') = toByteString ctProxy body
+          req' = setRQBody body' (contentType ctProxy) req
+      foldl' (\r (k,v) -> addHeader (cs . CI.original $ k) (cs v :: Text) r) req' hs
 
 -- | Make the querying function append @path@ to the request path.
 instance (KnownSymbol path, HasClient sublayout) => HasClient (path :> sublayout) where
